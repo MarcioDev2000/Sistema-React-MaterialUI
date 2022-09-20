@@ -1,0 +1,16 @@
+{
+    "pessoas": [
+        {
+            "id": 1,
+            "nome": "Marcio",
+            "sobrenome": "Abreu",
+            "idade": 22
+        },
+        {
+            "id": 2,
+            "nome": "Joana",
+            "sobrenome": "Abreu",
+            "idade": 41 
+        }
+    ]
+}
