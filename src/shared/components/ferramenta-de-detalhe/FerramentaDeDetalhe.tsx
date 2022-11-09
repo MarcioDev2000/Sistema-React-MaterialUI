@@ -28,7 +28,7 @@ export const FerramentaDeDetalhe: React.FC<IFerramentaDeDetalhe> = ({
     mostrarBotaoApagar= true,
     mostrarBotaoNovo = true,
     mostrarBotaoSalvar = true,
-    mostrarBotaoVoltar = true,
+    mostrarBotaoVoltar = false,
 
     mostrarBotaoNovoCarregamento = false,
     mostrarBotaoApagarCarregamento = false,
@@ -87,7 +87,7 @@ export const FerramentaDeDetalhe: React.FC<IFerramentaDeDetalhe> = ({
           onClick={clicarBotaoSalvarFechar}
           endIcon={ <Icon>save</Icon>}>
              <Typography variant="button" whiteSpace="nowrap"  textOverflow="ellipsis" overflow="hidden">
-               Salvar e Voltar
+               Salvar e Fechar
             </Typography>
             </Button>
         )}
