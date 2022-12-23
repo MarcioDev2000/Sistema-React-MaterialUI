@@ -1,4 +1,5 @@
 
+
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, LinearProgress, Pagination, IconButton, Icon } from "@mui/material";
 
 import { useMemo, useEffect, useState } from "react";
@@ -7,15 +8,15 @@ import { FerramentaDaListagem } from "../../shared/components"
 import { Environment } from "../../shared/environment";
 import { useDebounce } from "../../shared/hooks";
 import { LayoutBasePagina } from "../../shared/layouts"
-import { PessoasService, IListagemPessoas} from "../../shared/services/api/pessoas/PessoasServices";
+import { CidadesService, IListagemCidades} from "../../shared/services/api/cidades/CidadesService";
 
 
-export const ListagemDePessoas: React.FC = () =>{
+export const ListagemDeCidades: React.FC = () =>{
 
     const [searchParams, setSearchParams] = useSearchParams();
     const {debounce} = useDebounce();
     const navigate = useNavigate();
-    const [rows, setRows] = useState<IListagemPessoas []>([]);
+    const [rows, setRows] = useState<IListagemCidades []>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [isLoanding, setLoanding] = useState(true);
 
@@ -29,9 +30,32 @@ export const ListagemDePessoas: React.FC = () =>{
       return Number(searchParams.get('pagina') || '1');
     }, [searchParams]);
 
+    useEffect (() => {
+        setLoanding(true);
+      
+        debounce(()=>{
+          CidadesService.getAll(pagina, busca)
+          .then((result)=>{
+            setLoanding(false);
+      
+            if(result instanceof Error){
+              alert(result.message);
+            } else{
+               console.log(result);
+      
+               setRows(result.data);
+      
+               setTotalCount(result.totalCount);
+            } 
+          });
+        });
+      
+      }, [busca, debounce, pagina])
+         
+
     const handleDelete = (id: number) =>{
        if (window.confirm('Realmente deseja apagar?')){
-        PessoasService.deleteById(id)
+        CidadesService.deleteById(id)
         .then(result =>{
           if( result instanceof Error){
             alert(result.message);
@@ -47,38 +71,15 @@ export const ListagemDePessoas: React.FC = () =>{
     };
 
 
-useEffect (() => {
-  setLoanding(true);
-
-  debounce(()=>{
-    PessoasService.getAll(pagina, busca)
-    .then((result)=>{
-      setLoanding(false);
-
-      if(result instanceof Error){
-        alert(result.message);
-      } else{
-         console.log(result);
-
-         setRows(result.data);
-
-         setTotalCount(result.totalCount);
-      } 
-    });
-  });
-
-}, [busca, debounce, pagina])
-    
-
-
     return(
-         <LayoutBasePagina titulo="Listagem de Pessoas" 
-         barraFerramenta={<FerramentaDaListagem 
-         textoBotaoNovo="Nova" 
-         mostrarInputBuscar
-         textoDaBusca={busca}
-         ClicarEmNovo = {() => navigate('/pessoas/detalhe/nova')}
-         MudarTextoBuscar={texto => setSearchParams({busca: texto, pagina: '1'}, {replace: true})}
+         <LayoutBasePagina
+          titulo="Listagem de Cidades" 
+          barraFerramenta={<FerramentaDaListagem 
+          textoBotaoNovo="Nova" 
+          mostrarInputBuscar
+          textoDaBusca={busca}
+          ClicarEmNovo = {() => navigate('/cidades/detalhe/nova')}
+          MudarTextoBuscar={texto => setSearchParams({busca: texto, pagina: '1'}, {replace: true})}
          />}
          >
 
@@ -89,7 +90,6 @@ useEffect (() => {
                  <TableRow>
                   <TableCell>Ações</TableCell>
                   <TableCell>Nome</TableCell>
-                  <TableCell>Email</TableCell>
                  </TableRow>
 
                </TableHead>
@@ -102,12 +102,11 @@ useEffect (() => {
                            <IconButton onClick={() => handleDelete(row.id)}>
                              <Icon>delete</Icon>
                            </IconButton>
-                           <IconButton onClick={ () => navigate(`/pessoas/detalhe/${row.id} `)}>
+                           <IconButton onClick={ () => navigate(`/cidades/detalhe/${row.id} `)}>
                              <Icon>edit</Icon>
                            </IconButton>
                          </TableCell>
-                         <TableCell>{row.nomeCompleto}</TableCell>
-                         <TableCell>{row.email}</TableCell>
+                         <TableCell>{row.nome}</TableCell>
                         </TableRow>
 
                        ))}

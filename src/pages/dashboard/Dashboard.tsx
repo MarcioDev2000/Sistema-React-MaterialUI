@@ -1,4 +1,4 @@
-import { FerramentaDaListagem, FerramentaDeDetalhe} from "../../shared/components";
+import {FerramentaDeDetalhe} from "../../shared/components";
 import { LayoutBasePagina } from "../../shared/layouts";
 
 
